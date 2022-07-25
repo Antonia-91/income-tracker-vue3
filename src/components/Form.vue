@@ -28,7 +28,7 @@ export default {
       date: null,
     });
     function FormHandler() {
-      console.log(formData);
+      //console.log(formData);
 
       emit("add-income", {
         desc: formData.desc,

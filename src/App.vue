@@ -1,12 +1,14 @@
 <template>
   <component :is="Header" :totalIncome="state.totalIncome" />
-  <component :is="Form" />
+  <component :is="Form" @add-income="AddIncome" />
+  <component :is="IncomeList" :state="state" @remove-item="removeItem" />
 </template>
 
 <script>
 import Header from "./components/Header.vue";
 import { reactive, computed } from "vue";
 import Form from "./components/Form.vue";
+import IncomeList from "./components/IncomeList.vue";
 
 export default {
   setup() {
@@ -32,11 +34,35 @@ export default {
         }
       }),
     });
+
+    function AddIncome(data) {
+      let d = data.date.split("-");
+      let newD = new Date(d[0], d[1], d[2]);
+
+      state.income = [
+        ...state.income,
+        {
+          id: Date.now(),
+          desc: data.desc,
+          value: parseInt(data.value),
+          date: newD.getTime(),
+        },
+      ];
+      console.log(state.income);
+    }
+
+    function removeItem(id) {
+      state.income = state.income.filter((v) => v.id != id);
+    }
+
     // Return template data
     return {
       Header,
       state,
       Form,
+      AddIncome,
+      IncomeList,
+      removeItem,
     };
   },
 };
